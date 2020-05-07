@@ -4,6 +4,7 @@
 
 ```bash
 conda install django
+conda install jwt
 ```
 
 or
