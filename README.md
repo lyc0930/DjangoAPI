@@ -2,17 +2,27 @@
 
 ## 部署
 
-```bash
-> conda install django
-> conda install pyjwt
-> python manage.py runserver
+在 conda 虚拟环境中部署
+
+```shell
+> conda create -n HolidayAPI python=3.8
+> conda activate HolidayAPI
+(HolidayAPI) > conda install django
+(HolidayAPI) > conda install pyjwt
+(HolidayAPI) > python .\manage.py runserver
+```
+
+或
+
+```shell
+conda install --yes --file requirements.txt
 ```
 
 ## 人工测试
 
 ### 接口交互
 
-```bash
+```shell
 > curl -d username=rose -d password=12345 http://127.0.0.1:8000/user/signup
 {"code": 201, "message": "Signed up successfully. ", "data": {"username": "rose"}}
 > curl -d username=rose -d password=12345 http://127.0.0.1:8000/user/login
@@ -27,7 +37,7 @@
 
 ### 数据库查询
 
-```bash
+```shell
 > sqlite3 db.sqlite3
 SQLite version 3.31.1 2020-01-27 19:55:54
 Enter ".help" for usage hints.
