@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse
 from user.models import User, Holiday
+from django.core.cache import caches
 
 
 def signup(request):
     # request.encoding = 'utf-8'
     if request.method == 'POST':
-        print(request.POST)
         if 'username' in request.POST and 'password' in request.POST:
             if User.objects.filter(username=request.POST['username']).first():
                 message = ({'StatusCode': '0', 'Message': '用户名 ' +
@@ -22,13 +22,12 @@ def signup(request):
     else:
         message = ({'StatusCode': '-1', 'Message': '不支持的方法(GET)'})
     print(message)
-    return HttpResponse(message)
+    return JsonResponse(message)
 
 
 def login(request):
     # request.encoding = 'utf-8'
     if request.method == 'POST':
-        print(request.POST)
         if 'username' in request.POST and 'password' in request.POST:
             if User.objects.filter(username=request.POST['username'], password=request.POST['password']).first():
                 message = ({'StatusCode': '1', 'Message': '用户 ' +
@@ -40,4 +39,22 @@ def login(request):
     else:
         message = ({'StatusCode': '-1', 'Message': '不支持的方法(GET)'})
     print(message)
-    return HttpResponse(message)
+    return JsonResponse(message)
+
+
+def query(request):
+    # request.encoding = 'utf-8'
+    if request.method == 'POST':
+        if 'date' in request.POST:
+            queryDate = '2000' + request.POST['date'][-6:]
+            if Holiday.objects.filter(holiday_date=queryDate).first():
+                message = ({'StatusCode': '1', 'Message': '查询成功', 'HolidayName': Holiday.objects.filter(
+                    holiday_date=queryDate).first().holiday_name})
+            else:
+                message = ({'StatusCode': '0', 'Message': '查询失败'})
+        else:
+            message = ({'StatusCode': '-1', 'Message': '表单填写错误，查询失败'})
+    else:
+        message = ({'StatusCode': '-1', 'Message': '不支持的方法(GET)'})
+    print(message)
+    return JsonResponse(message)

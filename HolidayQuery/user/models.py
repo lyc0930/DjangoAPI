@@ -1,4 +1,7 @@
 from django.db import models
+import jwt
+from datetime import datetime, timedelta
+from django.conf import settings
 
 
 class User(models.Model):
@@ -7,6 +10,20 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
+
+    @property
+    def token(self):
+        return self._generate_jwt_token()
+
+    def _generate_jwt_token(self):
+        token = jwt.encode({
+            'exp': datetime.utcnow() + timedelta(days=1),
+            'iat': datetime.utcnow(),
+            'data': {
+                'username': self.username
+            }
+        }, settings.SECRET_KEY, algorithm='HS256')
+        return token.decode('utf-8')
 
 
 class Holiday(models.Model):
