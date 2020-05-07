@@ -6,7 +6,7 @@ class User(models.Model):
     password = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.user_name
+        return self.username
 
 
 class Holiday(models.Model):
